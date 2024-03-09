@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  nodejs_app:
+    build: .
+    ports:
+      - "2000:2000"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - NODE_ENV=development
+    networks:
+      - my-network
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: khedr
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pos_db
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+
+  pgAdmin:
+    image: dpage/pgadmin4
+    links:
+      - db
+    ports:
+      - "4000:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: kkhedr01@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: bridge
